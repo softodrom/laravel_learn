@@ -9,6 +9,10 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title', 'excerpt', 'body', 'image_path', 'is_published', 'min_to_read'
+    ];
+
     // protected $table = 'posts';
 
     // protected $primaryKey = 'title';
@@ -17,7 +21,7 @@ class Post extends Model
 
     // protected $dateTime = 'U';
 
-    protected $connection = 'sqlite';
+    // protected $connection = 'sqlite';
 
     // protected $attributes = [
     //     'is_published' => true

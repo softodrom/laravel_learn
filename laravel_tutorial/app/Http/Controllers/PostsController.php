@@ -66,7 +66,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+        return view('blog.create');
     }
 
     /**
@@ -74,7 +74,32 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|unique:posts|max:255',
+            'excerpt' => 'required',
+            'body' => 'required',
+            'image_path' => ['required', 'mimes:jpg,png,jped', 'max:5048'],
+            'min_to_read' => 'min:0|max:60'
+        ]);
+        // $post = new Post();
+        // $post->title = $request->title;
+        // $post->excerpt = $request->excerpt;
+        // $post->body = $request->body;
+        // $post->image_path = 'temporary';
+        // $post->is_published = $request->is_published === 'on';
+        // $post->min_to_read = $request->min_to_read;
+        // $post->save();
+
+        Post::create([
+            'title' => $request->title,
+            'excerpt' => $request->excerpt,
+            'body' => $request->body,
+            'image_path' => $this->storeImage($request),
+            'is_published' => $request->is_published === 'on',
+            'min_to_read' => $request->min_to_read
+        ]);
+
+        return redirect(route('blog.index'));
     }
 
     /**
@@ -92,7 +117,9 @@ class PostsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('blog.edit', [
+            'post' => Post::where('id', $id)->first()
+        ]);
     }
 
     /**
@@ -100,7 +127,27 @@ class PostsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255|unique:posts,title' . $id,
+            'excerpt' => 'required',
+            'body' => 'required',
+            'image_path' => ['mimes:jpg,png,jped', 'max:5048'],
+            'min_to_read' => 'min:0|max:60'
+        ]);
+        // POST::where('id', $id)->update([
+        //     'title' => $request->title,
+        //     'excerpt' => $request->excerpt,
+        //     'body' => $request->body,
+        //     'image_path' => $request->image,
+        //     'is_published' => $request->is_published === 'on',
+        //     'min_to_read' => $request->min_to_read
+        // ]);
+
+        POST::where('id', $id)->update($request->except([
+            '_token', '_method'
+        ]));
+
+        return redirect(route('blog.index'));
     }
 
     /**
@@ -108,6 +155,15 @@ class PostsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Post::destroy($id);
+
+        return redirect(route('blog.index'))->with('message', 'Post had been deleted');
+    }
+
+    private function storeImage($request){
+        $newImageName = uniqid() . '-' . $request->title . '.' .
+        $request->image->extension();
+
+        return $request->image->move(public_path('images'), $newImageName);
     }
 }

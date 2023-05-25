@@ -18,6 +18,10 @@ use App\Http\Controllers\FallbackController;
 
 // Route::get('/blog', [PostsController::class, 'index']);
 
+// POST
+Route::get('/blog/create', [PostsController::class, 'create'])->name('blog.create');
+Route::post('/blog', [PostsController::class, 'store'])->name('blog.store');
+
 // GET
 Route::get('/blog', [PostsController::class, 'index'])->name('blog.index');
 Route::get('/blog/{id}', [PostsController::class, 'show'])->name('blog.show');
@@ -38,10 +42,6 @@ Route::get('/blog/{id}', [PostsController::class, 'show'])->name('blog.show');
 //         'id', '[0-9]+',
 //         'name', '[A-Az-z]+']
 //     );
-
-// POST
-Route::get('/blog/create', [PostsController::class, 'create'])->name('blog.create');
-Route::post('/blog', [PostsController::class, 'store'])->name('blog.store');
 
 // PUT OR PATCH
 Route::get('/blog/edit/{id}', [PostsController::class, 'edit'])->name('blog.edit');
