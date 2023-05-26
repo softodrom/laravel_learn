@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostFormRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -57,7 +58,7 @@ class PostsController extends Controller
         // dd($posts);
 
         return view('blog.index', [
-            'posts' => Post::orderBy('updated_at', 'desc')->get()
+            'posts' => Post::orderBy('updated_at', 'desc')->paginate(20)
         ]);
     }
 
@@ -72,15 +73,17 @@ class PostsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostFormRequest $request)
     {
-        $request->validate([
-            'title' => 'required|unique:posts|max:255',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'image_path' => ['required', 'mimes:jpg,png,jped', 'max:5048'],
-            'min_to_read' => 'min:0|max:60'
-        ]);
+        // $request->validate([
+        //     'title' => 'required|unique:posts|max:255',
+        //     'excerpt' => 'required',
+        //     'body' => 'required',
+        //     'image_path' => ['required', 'mimes:jpg,png,jped', 'max:5048'],
+        //     'min_to_read' => 'min:0|max:60'
+        // ]);
+
+        $request->validated();
         // $post = new Post();
         // $post->title = $request->title;
         // $post->excerpt = $request->excerpt;
@@ -125,15 +128,17 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PostFormRequest $request, string $id)
     {
-        $request->validate([
-            'title' => 'required|max:255|unique:posts,title' . $id,
-            'excerpt' => 'required',
-            'body' => 'required',
-            'image_path' => ['mimes:jpg,png,jped', 'max:5048'],
-            'min_to_read' => 'min:0|max:60'
-        ]);
+        // $request->validate([
+        //     'title' => 'required|max:255|unique:posts,title' . $id,
+        //     'excerpt' => 'required',
+        //     'body' => 'required',
+        //     'image_path' => ['mimes:jpg,png,jped', 'max:5048'],
+        //     'min_to_read' => 'min:0|max:60'
+        // ]);
+
+        $request->validated();
         // POST::where('id', $id)->update([
         //     'title' => $request->title,
         //     'excerpt' => $request->excerpt,
