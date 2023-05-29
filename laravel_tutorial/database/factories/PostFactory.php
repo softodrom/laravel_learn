@@ -23,7 +23,7 @@ class PostFactory extends Factory
             'min_to_read' => $this->faker->numberBetween(1, 10),
             'image_path' => $this->faker->imageUrl(640, 480),
             'is_published' => 1,
-            'id' => 0
+            'user_id' => 1
         ];
     }
 }

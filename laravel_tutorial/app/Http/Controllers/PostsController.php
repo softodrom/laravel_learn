@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostFormRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PostsController extends Controller
@@ -75,6 +76,9 @@ class PostsController extends Controller
      */
     public function store(PostFormRequest $request)
     {
+        // dd($request->all());
+        // exit;
+        
         // $request->validate([
         //     'title' => 'required|unique:posts|max:255',
         //     'excerpt' => 'required',
@@ -93,13 +97,24 @@ class PostsController extends Controller
         // $post->min_to_read = $request->min_to_read;
         // $post->save();
 
-        Post::create([
+        $post = Post::create([
+            'user_id' => Auth::id(),
             'title' => $request->title,
             'excerpt' => $request->excerpt,
             'body' => $request->body,
             'image_path' => $this->storeImage($request),
             'is_published' => $request->is_published === 'on',
             'min_to_read' => $request->min_to_read
+        ]);
+
+        // dd($post->id);
+        // exit;
+
+        $post->meta->create([
+            'post_id' => $post->id,
+            'meta_description' => $request->meta_description,
+            'meta_keywords' => $request->meta_keywords,
+            'meta_robots' => $request->meta_robots
         ]);
 
         return redirect(route('blog.index'));
