@@ -110,7 +110,7 @@ class PostsController extends Controller
         // dd($post->id);
         // exit;
 
-        $post->meta->create([
+        $post->meta()->create([
             'post_id' => $post->id,
             'meta_description' => $request->meta_description,
             'meta_keywords' => $request->meta_keywords,
