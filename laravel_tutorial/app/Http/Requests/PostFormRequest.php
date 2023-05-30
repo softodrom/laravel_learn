@@ -21,8 +21,18 @@ class PostFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'title' => 'required|max:255|unique:posts,title' . $this->id,
+            'excerpt' => 'required',
+            'body' => 'required',
+            'image_path' => ['mimes:jpg,png,jped', 'max:5048'],
+            'min_to_read' => 'min:0|max:60'
         ];
+
+        if(in_array($this->method(), ['POST'])){
+            $rules['image'] = ['required', 'mimes:jpg,png,jpeg', 'max:5048'];
+        }
+
+        return $rules;
     }
 }
